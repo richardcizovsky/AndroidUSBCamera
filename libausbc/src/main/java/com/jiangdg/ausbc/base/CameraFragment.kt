@@ -924,14 +924,14 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
 
     protected open fun getCameraRequest(): CameraRequest {
         return CameraRequest.Builder()
-            .setPreviewWidth(640)
-            .setPreviewHeight(480)
+            .setPreviewWidth(1280)
+            .setPreviewHeight(720)
             .setRenderMode(CameraRequest.RenderMode.OPENGL)
             .setDefaultRotateType(RotateType.ANGLE_0)
             .setAudioSource(CameraRequest.AudioSource.SOURCE_SYS_MIC)
             .setPreviewFormat(CameraRequest.PreviewFormat.FORMAT_MJPEG)
             .setAspectRatioShow(true)
-            .setCaptureRawImage(false)
+            .setCaptureRawImage(true)
             .setRawPreviewData(false)
             .create();
     }
