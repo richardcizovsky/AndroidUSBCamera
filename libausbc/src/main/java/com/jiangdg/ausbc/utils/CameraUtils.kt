@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.hardware.usb.UsbConstants
 import android.hardware.usb.UsbDevice
 import android.media.Image
+import android.os.Build
 import androidx.core.content.ContextCompat
 import com.jiangdg.ausbc.R
 import com.jiangdg.usb.DeviceFilter
@@ -109,14 +110,18 @@ object CameraUtils {
             }
     }
 
-    fun hasAudioPermission(ctx: Context): Boolean{
+    fun hasAudioPermission(ctx: Context): Boolean {
         val locPermission = ContextCompat.checkSelfPermission(ctx, Manifest.permission.RECORD_AUDIO)
         return locPermission == PackageManager.PERMISSION_GRANTED
     }
 
     fun hasStoragePermission(ctx: Context): Boolean{
-        val locPermission = ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        return locPermission == PackageManager.PERMISSION_GRANTED
+        if (Build.VERSION.SDK_INT < 33) {
+            val locPermission = ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            return locPermission == PackageManager.PERMISSION_GRANTED
+        } else {
+            return true
+        }
     }
 
     fun hasCameraPermission(ctx: Context): Boolean{

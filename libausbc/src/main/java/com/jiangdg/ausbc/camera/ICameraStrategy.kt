@@ -326,8 +326,12 @@ abstract class ICameraStrategy(context: Context) : Handler.Callback {
      */
     protected fun hasStoragePermission(): Boolean {
         getContext() ?: return false
-        val locPermission = ContextCompat.checkSelfPermission(getContext()!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        return locPermission == PackageManager.PERMISSION_GRANTED
+        if (Build.VERSION.SDK_INT < 33) {
+            val locPermission = ContextCompat.checkSelfPermission(getContext()!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            return locPermission == PackageManager.PERMISSION_GRANTED
+        } else {
+            return true
+        }
     }
 
     private fun addLifecycleObserver(context: Context) {
