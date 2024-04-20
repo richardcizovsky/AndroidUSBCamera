@@ -193,7 +193,6 @@ public final class USBMonitor {
 				} else {
 					context.registerReceiver(mUsbReceiver, filter);
 				}
-				context.registerReceiver(mUsbReceiver, filter);
 			}
 			// start connection check
 			mDeviceCounts = 0;
