@@ -280,7 +280,7 @@ class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
             val values = ContentValues()
             values.put(MediaStore.Images.ImageColumns.TITLE, title)
             values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, displayName)
-            values.put(MediaStore.Images.ImageColumns.DATA, path)
+            //values.put(MediaStore.Images.ImageColumns.DATA, path)
             values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, date)
             values.put(MediaStore.Images.ImageColumns.ORIENTATION, orientation)
             values.put(MediaStore.Images.ImageColumns.LONGITUDE, location?.longitude)
