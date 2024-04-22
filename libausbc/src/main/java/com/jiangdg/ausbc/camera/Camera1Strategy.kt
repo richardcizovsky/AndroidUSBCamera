@@ -101,7 +101,7 @@ class Camera1Strategy(ctx: Context) : ICameraStrategy(ctx), Camera.PreviewCallba
                 val values = ContentValues()
                 values.put(MediaStore.Images.ImageColumns.TITLE, title)
                 values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, displayName)
-                values.put(MediaStore.Images.ImageColumns.DATA, path)
+                //values.put(MediaStore.Images.ImageColumns.DATA, path)
                 values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, date)
                 values.put(MediaStore.Images.ImageColumns.WIDTH, width)
                 values.put(MediaStore.Images.ImageColumns.HEIGHT, height)

@@ -285,7 +285,7 @@ class CameraUVC(ctx: Context, device: UsbDevice) : MultiCameraClient.ICamera(ctx
             val values = ContentValues()
             values.put(MediaStore.Images.ImageColumns.TITLE, title)
             values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, displayName)
-            values.put(MediaStore.Images.ImageColumns.DATA, path)
+            //values.put(MediaStore.Images.ImageColumns.DATA, path)
             values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, date)
             values.put(MediaStore.Images.ImageColumns.LONGITUDE, location?.longitude)
             values.put(MediaStore.Images.ImageColumns.LATITUDE, location?.latitude)
