@@ -62,7 +62,8 @@ public final class USBMonitor {
 	private static final String TAG = "USBMonitor";
 
 	private static final String ACTION_USB_PERMISSION_BASE = "com.serenegiant.USB_PERMISSION.";
-	private final String ACTION_USB_PERMISSION = ACTION_USB_PERMISSION_BASE + ".GRANT_USB"/*hashCode()*/;
+	//private final String ACTION_USB_PERMISSION = ACTION_USB_PERMISSION_BASE + ".GRANT_USB"/*hashCode()*/;
+	private final String ACTION_USB_PERMISSION = ACTION_USB_PERMISSION_BASE + hashCode();
 
 	public static final String ACTION_USB_DEVICE_ATTACHED = "android.hardware.usb.action.USB_DEVICE_ATTACHED";
 
@@ -175,7 +176,10 @@ public final class USBMonitor {
 			if (context != null) {
 				if (Build.VERSION.SDK_INT >= 34) {
 					int PENDING_FLAG_IMMUTABLE =  1<<26;
-					mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), PENDING_FLAG_IMMUTABLE);
+					int PENDING_FLAG_MUTABLE =  1<<25;
+					Intent intent = new Intent(ACTION_USB_PERMISSION);
+					intent.setPackage(context.getPackageName());
+					mPermissionIntent = PendingIntent.getBroadcast(context, 0, intent, PENDING_FLAG_MUTABLE);
 				} else if (Build.VERSION.SDK_INT >= 31) {
 					// avoid acquiring intent data failed in receiver on Android12
 					// when using PendingIntent.FLAG_IMMUTABLE
