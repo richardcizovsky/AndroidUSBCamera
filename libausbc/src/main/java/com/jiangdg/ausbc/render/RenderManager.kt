@@ -434,7 +434,28 @@ class RenderManager(
         val path = savePath ?: "$mCameraDir/$displayName"
         val width = mWidth
         val height = mHeight
-
+        // 写入文件
+        // glReadPixels读取的是大端数据，但是我们保存的是小端
+        // 故需要将图片上下颠倒为正
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(path)
+            GLBitmapUtils.transFrameBufferToBitmap(mFBOBufferId, width, height).apply {
+                compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                recycle()
+            }
+        } catch (e: IOException) {
+            mMainHandler.post {
+                mCaptureDataCb?.onError(e.localizedMessage)
+            }
+            Logger.e(TAG, "Failed to write file, err = ${e.localizedMessage}", e)
+        } finally {
+            try {
+                fos?.close()
+            } catch (e: IOException) {
+                Logger.e(TAG, "Failed to write file, err = ${e.localizedMessage}", e)
+            }
+        }
         //Judge whether it is saved successfully
         //Update gallery if successful
         val file = File(path)
@@ -451,36 +472,11 @@ class RenderManager(
         values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, date)
         values.put(MediaStore.Images.ImageColumns.WIDTH, width)
         values.put(MediaStore.Images.ImageColumns.HEIGHT, height)
-
-        val resolver = mContext.contentResolver
-        val uri = resolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-
-        uri?.let {
-            try {
-                resolver.openOutputStream(uri).use { outputStream ->
-                    GLBitmapUtils.transFrameBufferToBitmap(mFBOBufferId, width, height).apply {
-                        compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                        recycle()
-                    }
-                }
-                mMainHandler.post {
-                    mCaptureDataCb?.onComplete(uri.toString())
-                }
-            } catch (e: IOException) {
-                Logger.e(TAG, "Failed to write file, err = ${e.localizedMessage}", e)
-                mMainHandler.post {
-                    mCaptureDataCb?.onError(e.localizedMessage)
-                }
-            }
-        } ?: run {
-            Logger.e(TAG, "Failed to insert file into MediaStore")
-            mMainHandler.post {
-                mCaptureDataCb?.onError("Failed to insert file into MediaStore")
-            }
+        mContext.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        mMainHandler.post {
+            mCaptureDataCb?.onComplete(path)
         }
-
         mCaptureState.set(false)
-
         if (Utils.debugCamera) {
             Logger.i(TAG, "captureImageInternal save path = $path")
         }
